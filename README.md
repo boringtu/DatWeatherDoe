@@ -34,14 +34,19 @@ If using location, please make sure that the app has permission to access locati
 ![Location services screenshot 1](location_services_1.png)
 ![Location services screenshot 2](location_services_2.png)
 
-## Developer Setup
+## 编译和安装此分支
 
-- Get your personal API key for WeatherAPI [here](https://www.weatherapi.com)
-- Add the following in "Config.xcconfig":
+需要安装 Xcode，并将其选为命令行开发工具。首次编译需要联网，Xcode 会自动下载依赖并缓存到项目的 `build/SourcePackages`。
 
-```env
-WEATHER_API_KEY=YOUR_KEY
+在仓库根目录运行：
+
+```sh
+./build.sh
 ```
+
+编译成功后，脚本会显示 `build/Build/Products/Release/DatWeatherDoe.app` 的完整路径。退出正在运行的旧版本，再将新生成的应用拖到 Finder 的「应用程序」文件夹。可以将它改名为 `DatWeatherDoe Custom.app`，方便和原版区分。
+
+启动应用后，点开顶部菜单栏的天气图标，在 **WeatherAPI Key** 一栏粘贴密钥，然后点「完成」。密钥保存在本机应用设置中，编译时可留空。 [获取 WeatherAPI 密钥](https://www.weatherapi.com/docs/getting-started/)
 
 ## Donate
 
