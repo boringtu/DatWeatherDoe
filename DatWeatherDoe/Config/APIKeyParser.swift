@@ -9,10 +9,11 @@
 import Foundation
 
 final class APIKeyParser {
-    func parse() -> String {
-        guard let apiKey = Bundle.main.infoDictionary?["WEATHER_API_KEY"] as? String else {
-            fatalError("Unable to find OPENWEATHERMAP_APP_ID in `Config.xcconfig`")
-        }
-        return apiKey
+    /** 优先使用本机设置中的个人密钥，留空时使用构建配置 */
+    func parse(personalKey: String) -> String {
+        // 允许从网页粘贴时带有首尾空白
+        let configuredKey = personalKey.trimmingCharacters(in: .whitespacesAndNewlines);
+        guard configuredKey.isEmpty else { return configuredKey; }
+        return Bundle.main.infoDictionary?["WEATHER_API_KEY"] as? String ?? "";
     }
 }

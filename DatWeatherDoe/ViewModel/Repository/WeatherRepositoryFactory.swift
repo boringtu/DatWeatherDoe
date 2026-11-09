@@ -22,11 +22,13 @@ final class WeatherRepositoryFactory: WeatherRepositoryFactoryType {
         let logger: Logger
     }
 
-    private let appId: String
+    // 每次创建取数对象时读取当前的密钥
+    private let appId: () -> String;
     private let networkClient: NetworkClientType
     private let logger: Logger
 
-    init(appId: String, networkClient: NetworkClientType, logger: Logger) {
+    /** 接收密钥读取闭包，使设置保存后无需重启 */
+    init(appId: @escaping () -> String, networkClient: NetworkClientType, logger: Logger) {
         self.appId = appId
         self.networkClient = networkClient
         self.logger = logger
@@ -34,7 +36,7 @@ final class WeatherRepositoryFactory: WeatherRepositoryFactoryType {
 
     func create(location: CLLocationCoordinate2D) -> WeatherRepositoryType {
         SystemLocationWeatherRepository(
-            appId: appId,
+            appId: appId(),
             location: location,
             networkClient: networkClient,
             logger: logger
@@ -43,7 +45,7 @@ final class WeatherRepositoryFactory: WeatherRepositoryFactoryType {
 
     func create(latLong: String) -> WeatherRepositoryType {
         LocationCoordinatesWeatherRepository(
-            appId: appId,
+            appId: appId(),
             latLong: latLong,
             networkClient: networkClient,
             logger: logger

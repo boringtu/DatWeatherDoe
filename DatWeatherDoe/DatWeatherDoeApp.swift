@@ -19,13 +19,15 @@ struct DatWeatherDoeApp: App {
     @State private var statusItem: NSStatusItem?
 
     init() {
-        configManager = ConfigManager()
+        // 取数时读取当前设置，提交新密钥后即可刷新
+        let weatherConfig = ConfigManager();
+        configManager = weatherConfig;
 
         let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "bundleID", category: "main")
         viewModel = WeatherViewModel(
             locationFetcher: SystemLocationFetcher(logger: logger),
             weatherFactory: WeatherRepositoryFactory(
-                appId: APIKeyParser().parse(),
+                appId: { APIKeyParser().parse(personalKey: weatherConfig.personalWeatherAPIKey); },
                 networkClient: NetworkClient(),
                 logger: logger
             ),

@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Show comma next to weather text" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示天气文本旁的逗号"
+          }
+        }
+      }
+    },
     "" : {
 
     },

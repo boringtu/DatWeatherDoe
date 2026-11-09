@@ -9,7 +9,8 @@
 import Foundation
 
 protocol WeatherDataFormatterType {
-    func getLocation(for data: WeatherData) -> String
+    /** 组合地点名称和天气描述 */
+    func getLocation(for data: WeatherData, displayName: String) -> String;
     func getWeatherText(for data: WeatherData) -> String
     func getSunriseSunset(for data: WeatherData) -> String
     func getWindSpeedItem(for data: WeatherData) -> String
@@ -23,12 +24,13 @@ final class WeatherDataFormatter: WeatherDataFormatterType {
         self.configManager = configManager
     }
 
-    func getLocation(for data: WeatherData) -> String {
-        [
-            data.response.locationName,
+    /** 生成详情面板上的地点和天气描述 */
+    func getLocation(for data: WeatherData, displayName: String) -> String {
+        return [
+            displayName,
             WeatherConditionTextMapper().map(data.weatherCondition)
         ]
-        .joined(separator: " - ")
+        .joined(separator: " - ");
     }
 
     func getWeatherText(for data: WeatherData) -> String {

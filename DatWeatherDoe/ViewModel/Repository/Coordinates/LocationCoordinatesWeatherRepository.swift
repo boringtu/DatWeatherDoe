@@ -27,14 +27,16 @@ final class LocationCoordinatesWeatherRepository: WeatherRepositoryType {
         self.logger = logger
     }
 
-    func getWeather() async throws -> WeatherAPIResponse {
+    /** 按原有的查询坐标获取天气并将坐标交给显示层 */
+    func getWeather() async throws -> WeatherObservation {
         logger.debug("Getting weather via lat/long")
 
         do {
             let location = try getLocationCoordinatesFrom(latLong)
             let url = try WeatherURLBuilder(appId: appId, location: location).build()
             let data = try await networkClient.performRequest(url: url)
-            return try WeatherAPIResponseParser().parse(data)
+            // 保留请求坐标，避免采用服务返回的测站或城市坐标
+            return .init(response: try WeatherAPIResponseParser().parse(data), coordinates: location);
         } catch {
             logger.error("Getting weather via lat/long failed")
 

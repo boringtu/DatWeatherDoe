@@ -58,6 +58,14 @@ final class ConfigureViewModel: ObservableObject {
         didSet { configManager.weatherConditionPosition = weatherConditionPosition.rawValue }
     }
 
+    // 记录天气描述旁的逗号开关
+    @Published var usesWeatherConditionComma: Bool {
+        didSet { configManager.usesWeatherConditionComma = usesWeatherConditionComma; }
+    }
+
+    // 点击完成或关闭面板时保存的个人密钥
+    @Published var personalWeatherAPIKey: String;
+
     private let configManager: ConfigManagerType
 
     init(configManager: ConfigManagerType) {
@@ -67,6 +75,9 @@ final class ConfigureViewModel: ObservableObject {
         
         weatherSource = WeatherSource(rawValue: configManager.weatherSource) ?? .location
         weatherSourceText = configManager.weatherSourceText
+        // 载入已保存的显示设置
+        personalWeatherAPIKey = configManager.personalWeatherAPIKey;
+        usesWeatherConditionComma = configManager.usesWeatherConditionComma;
 
         switch configManager.refreshInterval {
         case 300: refreshInterval = .fiveMinutes
@@ -87,7 +98,9 @@ final class ConfigureViewModel: ObservableObject {
             ?? .beforeTemperature
     }
 
+    /** 保存取数设置与显示偏好 */
     func saveConfig() {
+        configManager.personalWeatherAPIKey = personalWeatherAPIKey;
         configManager.updateWeatherSource(weatherSource, sourceText: weatherSourceText)
         weatherSourceText = configManager.weatherSourceText
 

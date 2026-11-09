@@ -23,6 +23,10 @@ protocol ConfigManagerType: AnyObject {
     var valueSeparator: String { get set }
     var isWeatherConditionAsTextEnabled: Bool { get set }
     var weatherConditionPosition: String { get set }
+    // 当前用户为本地构建提供的天气服务密钥
+    var personalWeatherAPIKey: String { get set }
+    // 是否在天气描述与数值之间显示逗号
+    var usesWeatherConditionComma: Bool { get set }
 
     func updateWeatherSource(_ source: WeatherSource, sourceText: String)
     func setConfigOptions(_ options: ConfigOptions)
@@ -69,6 +73,14 @@ final class ConfigManager: ConfigManagerType {
 
     @AppStorage("weatherConditionPosition")
     public var weatherConditionPosition = WeatherConditionPosition.beforeTemperature.rawValue
+
+    // 仅在本机应用偏好设置中保存用户提供的密钥
+    @AppStorage("personalWeatherAPIKey")
+    var personalWeatherAPIKey = "";
+
+    // 默认保留原有的逗号格式
+    @AppStorage("usesWeatherConditionComma")
+    var usesWeatherConditionComma = true;
 
     func updateWeatherSource(_ source: WeatherSource, sourceText: String) {
         weatherSource = source.rawValue

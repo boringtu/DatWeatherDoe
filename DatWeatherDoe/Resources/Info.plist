@@ -4,6 +4,10 @@
 <dict>
 	<key>WEATHER_API_KEY</key>
 	<string>${WEATHER_API_KEY}</string>
+	<key>LocalWeatherPlaceSource</key>
+	<string>$(LOCAL_WEATHER_PLACE_SOURCE)</string>
+	<key>LocalWeatherPlaceName</key>
+	<string>$(LOCAL_WEATHER_PLACE_NAME)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

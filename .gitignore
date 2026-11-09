@@ -59,3 +59,4 @@ DatWeatherDoe/Resources/Keys.plist
 
 # Secrets
 Config.xcconfig
+/Config.local.xcconfig

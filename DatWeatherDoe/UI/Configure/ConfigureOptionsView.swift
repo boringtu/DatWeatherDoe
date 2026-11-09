@@ -26,6 +26,15 @@ struct ConfigureOptionsView: View {
 
             ConfigureWeatherOptionsView(viewModel: viewModel)
 
+            // 默认将用户输入的密钥遮蔽显示
+            HStack {
+                Text("WeatherAPI Key");
+                Spacer();
+                SecureField("WeatherAPI Key", text: $viewModel.personalWeatherAPIKey)
+                    .labelsHidden()
+                    .frame(width: 150);
+            }
+
             HStack {
                 Text(LocalizedStringKey("Refresh Interval"))
                 Spacer()
@@ -84,6 +93,14 @@ struct ConfigureOptionsView: View {
                 .frame(maxWidth: 120)
             }
             .disabled(!viewModel.isWeatherConditionAsTextEnabled)
+
+            // 只控制天气描述和数值之间的标点
+            HStack {
+                Text(LocalizedStringKey("Show comma next to weather text"));
+                Spacer();
+                Toggle(isOn: $viewModel.usesWeatherConditionComma) {};
+            }
+            .disabled(!viewModel.isWeatherConditionAsTextEnabled);
         }
         .padding()
     }

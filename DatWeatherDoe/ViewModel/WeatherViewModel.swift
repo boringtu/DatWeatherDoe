@@ -6,6 +6,7 @@
 //  Copyright © 2022 Inder Dhir. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 import OSLog
 
@@ -16,6 +17,9 @@ final class WeatherViewModel: WeatherViewModelType, ObservableObject {
     private var dataFormatter: WeatherDataFormatterType!
     private let logger: Logger
     private var reachability: NetworkReachability!
+
+    // 仅用于解析详情面板的地名
+    private let placeNameResolver = ChinesePlaceNameResolver();
 
     private let forecaster = WeatherForecaster()
     private var weatherTimerTask: Task<Void, Never>?
@@ -70,23 +74,36 @@ final class WeatherViewModel: WeatherViewModelType, ObservableObject {
         )
     }
 
+    /** 先显示天气，再用相同坐标补充中文地名 */
     private func getWeatherWithSelectedSource() async {
         let weatherSource = WeatherSource(rawValue: configManager.weatherSource) ?? .location
 
         do {
-            let weatherData = switch weatherSource {
+            // 自动定位与手动经纬度都返回原始天气查询坐标
+            let result = switch weatherSource {
             case .location:
                 try await getWeatherAfterUpdatingLocation()
             case .latLong:
                 try await getWeatherViaLocationCoordinates()
-            }
-            updateWeatherData(weatherData)
+            };
+            guard !Task.isCancelled else { return; }
+            let sourceName = result.data.response.locationName;
+            let availableName = placeNameResolver.availableName(sourceName: sourceName, coordinates: result.coordinates);
+            updateWeatherData(result.data, displayName: availableName ?? sourceName);
+            guard availableName == nil else { return; }
+
+            // 地图请求较慢时天气仍能立即显示
+            let displayName = await placeNameResolver.resolve(sourceName: sourceName, coordinates: result.coordinates);
+            guard !Task.isCancelled, displayName != sourceName else { return; }
+            updateWeatherData(result.data, displayName: displayName);
         } catch {
-            updateWeatherData(error)
+            guard !Task.isCancelled else { return; }
+            updateWeatherData(error);
         }
     }
 
-    private func getWeatherAfterUpdatingLocation() async throws -> WeatherData {
+    /** 按系统定位查询天气并保留坐标 */
+    private func getWeatherAfterUpdatingLocation() async throws -> (data: WeatherData, coordinates: CLLocationCoordinate2D) {
         let locationFetcher = locationFetcher
         let location = try await locationFetcher.getLocation()
 
@@ -96,7 +113,8 @@ final class WeatherViewModel: WeatherViewModelType, ObservableObject {
         )
     }
 
-    private func getWeatherViaLocationCoordinates() async throws -> WeatherData {
+    /** 按用户填写的经纬度查询天气并保留坐标 */
+    private func getWeatherViaLocationCoordinates() async throws -> (data: WeatherData, coordinates: CLLocationCoordinate2D) {
         let latLong = configManager.weatherSourceText
         guard !latLong.isEmpty else {
             throw WeatherError.latLongIncorrect
@@ -116,6 +134,7 @@ final class WeatherViewModel: WeatherViewModelType, ObservableObject {
         )
     }
 
+    /** 为菜单栏格式化器组装当前显示设置 */
     private func buildWeatherTextOptions(for unit: MeasurementUnit) -> WeatherTextBuilder.Options {
         let conditionPosition = WeatherConditionPosition(rawValue: configManager.weatherConditionPosition)
             ?? .beforeTemperature
@@ -130,30 +149,35 @@ final class WeatherViewModel: WeatherViewModelType, ObservableObject {
                 isUnitSymbolOff: configManager.isUnitSymbolOff
             ),
             isShowingHumidity: configManager.isShowingHumidity,
-            isShowingUVIndex: configManager.isShowingUVIndex
-        )
+            isShowingUVIndex: configManager.isShowingUVIndex,
+            // 单独控制天气描述的标点
+            usesWeatherConditionComma: configManager.usesWeatherConditionComma,
+        );
     }
 
+    /** 构建天气显示数据并将同一坐标交给地名查询 */
     private func getWeather(
         repository: WeatherRepositoryType,
         unit: MeasurementUnit
-    ) async throws -> WeatherData {
+    ) async throws -> (data: WeatherData, coordinates: CLLocationCoordinate2D) {
         do {
-            let response = try await repository.getWeather()
+            // 坐标直接来自发出天气请求的对象
+            let observation = try await repository.getWeather();
             let weatherData = WeatherDataBuilder(
-                response: response,
+                response: observation.response,
                 options: buildWeatherDataOptions(for: unit),
                 logger: logger
-            ).build()
-            return weatherData
+            ).build();
+            return (weatherData, observation.coordinates);
         } catch {
             throw WeatherError.networkError
         }
     }
 
-    private func updateWeatherData(_ data: WeatherData) {
+    /** 使用当前解析结果更新菜单详情与菜单栏 */
+    private func updateWeatherData(_ data: WeatherData, displayName: String) {
         menuOptionData = MenuOptionData(
-            locationText: dataFormatter.getLocation(for: data),
+            locationText: dataFormatter.getLocation(for: data, displayName: displayName),
             weatherText: dataFormatter.getWeatherText(for: data),
             sunriseSunsetText: dataFormatter.getSunriseSunset(for: data),
             tempHumidityWindText: dataFormatter.getWindSpeedItem(for: data),

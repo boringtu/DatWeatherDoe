@@ -20,6 +20,8 @@ final class WeatherTextBuilder: WeatherTextBuilderType {
         let temperatureOptions: TemperatureTextBuilder.Options
         let isShowingHumidity: Bool
         let isShowingUVIndex: Bool
+        // 为 false 时用单个空格分隔天气描述与数值
+        let usesWeatherConditionComma: Bool
     }
 
     private let response: WeatherAPIResponse
@@ -72,6 +74,7 @@ final class WeatherTextBuilder: WeatherTextBuilderType {
         ).build()
     }
 
+    /** 将天气描述按设定位置和标点拼接到菜单栏数值 */
     private func buildWeatherConditionAsText(initial: String) -> String {
         guard options.isWeatherConditionAsTextEnabled else { return initial }
 
@@ -82,9 +85,9 @@ final class WeatherTextBuilder: WeatherTextBuilderType {
             [weatherConditionText, initial] :
             [initial, weatherConditionText.lowercased()]
 
-        return combinedString
-            .compactMap { $0 }
-            .joined(separator: ", ")
+        // 缺少任意一段文字时不添加分隔符
+        let separator = options.usesWeatherConditionComma ? ", " : " ";
+        return combinedString.filter { !$0.isEmpty }.joined(separator: separator);
     }
 }
 

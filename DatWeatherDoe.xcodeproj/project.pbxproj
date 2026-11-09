@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A82EE2BA92454365A67D1372 /* ChinesePlaceNameResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82EE2BA92454365A67D1373 /* ChinesePlaceNameResolver.swift */; };
+		A82EE2BA92454365A67D1370 /* WeatherDisplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82EE2BA92454365A67D1371 /* WeatherDisplayTests.swift */; };
 		2000D4082AD86DAA0052EDA6 /* WindSpeedFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000D4072AD86DAA0052EDA6 /* WindSpeedFormatter.swift */; };
 		20012FA6267980EE00553B60 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 20012FA5267980EE00553B60 /* Reachability */; };
 		200520F62C29426E00006FC0 /* WeatherDataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200520F52C29426E00006FC0 /* WeatherDataFormatter.swift */; };
@@ -90,6 +92,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A82EE2BA92454365A67D1373 /* ChinesePlaceNameResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChinesePlaceNameResolver.swift; sourceTree = "<group>"; };
+		A82EE2BA92454365A67D1371 /* WeatherDisplayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDisplayTests.swift; sourceTree = "<group>"; };
 		2000D4072AD86DAA0052EDA6 /* WindSpeedFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindSpeedFormatter.swift; sourceTree = "<group>"; };
 		200520F52C29426E00006FC0 /* WeatherDataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataFormatter.swift; sourceTree = "<group>"; };
 		2005C054278CB4E40067BBD1 /* WeatherValidatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherValidatorType.swift; sourceTree = "<group>"; };
@@ -348,6 +352,7 @@
 			children = (
 				2074949A27A09337002AA589 /* Location */,
 				2074949827A09278002AA589 /* WeatherURLBuilderTests.swift */,
+				A82EE2BA92454365A67D1371 /* WeatherDisplayTests.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 				20BBCDAC278B8B28007DEEB0 /* WeatherViewModelType.swift */,
 				20BBCDA9278B8A18007DEEB0 /* WeatherViewModel.swift */,
 				200520F52C29426E00006FC0 /* WeatherDataFormatter.swift */,
+				A82EE2BA92454365A67D1373 /* ChinesePlaceNameResolver.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -700,6 +706,7 @@
 				206FF1BB2BB4BB9400111EAE /* WeatherConditionPosition.swift in Sources */,
 				20206F0727BFF3D7004B418F /* ConfigureView.swift in Sources */,
 				200520F62C29426E00006FC0 /* WeatherDataFormatter.swift in Sources */,
+				A82EE2BA92454365A67D1372 /* ChinesePlaceNameResolver.swift in Sources */,
 				2039B3EB2C2896D7006A6B6D /* ForecastTemperatureData.swift in Sources */,
 				20F17D3A26597A02003A164E /* WeatherData.swift in Sources */,
 				202B1015278D46AB00ED6D42 /* WeatherConditionBuilder.swift in Sources */,
@@ -717,6 +724,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2074949927A09278002AA589 /* WeatherURLBuilderTests.swift in Sources */,
+				A82EE2BA92454365A67D1370 /* WeatherDisplayTests.swift in Sources */,
 				20B9CDCF27B8335A00C42508 /* TemperatureUnitTests.swift in Sources */,
 				20B3845F27A1CFE800F85482 /* LocationValidatorTests.swift in Sources */,
 				20B9CDD127B833EE00C42508 /* RefreshIntervalTests.swift in Sources */,
@@ -934,6 +942,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.inderdhir.DefaultsTests;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatWeatherDoe.app/Contents/MacOS/DatWeatherDoe";
@@ -953,6 +962,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.inderdhir.DefaultsTests;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatWeatherDoe.app/Contents/MacOS/DatWeatherDoe";

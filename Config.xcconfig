@@ -10,3 +10,8 @@
 // https://help.apple.com/xcode/#/dev745c5c974
 
 WEATHER_API_KEY=
+
+// 本机可选配置，默认随应用发布的设置不含个人地点或密钥
+LOCAL_WEATHER_PLACE_SOURCE=
+LOCAL_WEATHER_PLACE_NAME=
+#include? "Config.local.xcconfig"
